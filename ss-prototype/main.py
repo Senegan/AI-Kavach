@@ -149,6 +149,20 @@ class SelfHealingSentinel:
             source_code
         )
 
+        patch_changes = self.llm.describe_changes(
+            source_code,
+            repaired_code
+        )
+
+        if patch_changes:
+            print("    Patch summary:")
+            for index, change in enumerate(patch_changes[:3], 1):
+                prev_line = change["prev"] or "-"
+                latest_line = change["latest"] or "-"
+                print(f"      {index}. Prev   : {prev_line}")
+                print(f"         Latest : {latest_line}")
+                print(f"         Why    : {change['explanation']}")
+
         candidate = Path(
             "workspace/patched.c"
         )
